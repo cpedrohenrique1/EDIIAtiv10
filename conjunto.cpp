@@ -1,11 +1,12 @@
 #include "conjunto.h"
 
-Conjunto::Conjunto(int tamanho_array):
+Conjunto::Conjunto(int& tamanho_array):
     vetor(0),
     vetor_selection_sort(0),
     vetor_insertion_sort(0),
     vetor_bubble_sort(0),
     vetor_merge_sort(0),
+    vetor_heap_sort(0),
     tamanho_vetor(0),
     nmr_execucoes(0)
 {
@@ -19,10 +20,11 @@ Conjunto::Conjunto(int tamanho_array):
         vetor_insertion_sort = new int[tamanho_vetor];
         vetor_bubble_sort = new int[tamanho_vetor];
         vetor_merge_sort = new int[tamanho_vetor];
+        vetor_heap_sort = new int[tamanho_vetor];
         srand(time(0));
         for (int i = 0; i < tamanho_vetor; ++i){
             ++nmr_execucoes;
-            vetor_merge_sort[i] = vetor_bubble_sort[i] = vetor_insertion_sort[i] = vetor_selection_sort[i] = vetor[i] = rand() % 1001;
+            vetor_heap_sort[i] = vetor_merge_sort[i] = vetor_bubble_sort[i] = vetor_insertion_sort[i] = vetor_selection_sort[i] = vetor[i] = rand() % 1001;
         }
     }catch(std::bad_alloc &e){
         throw QString("Erro: memoria insuficiente");
@@ -51,6 +53,10 @@ int* Conjunto::getVetorBubbleSort() const{
 
 int* Conjunto::getVetorMergeSort() const{
     return vetor_merge_sort;
+}
+
+int* Conjunto::getVetorHeapSort() const{
+    return vetor_heap_sort;
 }
 
 int Conjunto::getNmrExecucoes() const{
@@ -138,7 +144,7 @@ void Conjunto::mergeSort(int *array, int inicio, int fim){
     }
 }
 
-void Conjunto::merge(int *array, int inicio, int meio, int fim){
+void Conjunto::merge(int *array, int& inicio, int& meio, int& fim){
     int n1 = meio - inicio + 1;
     int n2 = fim - meio;
     int *L = new int[n1];
@@ -174,6 +180,43 @@ void Conjunto::merge(int *array, int inicio, int meio, int fim){
     delete[] M;
 }
 
+void Conjunto::heapSort(){
+    if (tamanho_vetor <= 0 || !vetor_heap_sort){
+        throw QString("Erro: vetor vazio ou tamanho invalido");
+    }
+    if (nmr_execucoes){
+        nmr_execucoes = 0;
+    }
+    heapSort(vetor_heap_sort, tamanho_vetor);
+}
+
+void Conjunto::heapSort(int *array, int& tamanho_vetor){
+    for (int i = tamanho_vetor/2 - 1; i >= 0; --i){
+        heapify(array, tamanho_vetor, i);
+    }
+    for (int i = tamanho_vetor - 1; i >= 0; --i){
+        std::swap(array[0], array[i]);
+        heapify(array, i, 0);
+    }
+}
+
+void Conjunto::heapify(int *array, int& tamanho_vetor, int indice){
+    ++nmr_execucoes;
+    int largest = indice;
+    int left = 2*indice+1;
+    int right = 2*indice+2;
+    if (left < tamanho_vetor && array[left] > array[largest]){
+        largest = left;
+    }
+    if (right < tamanho_vetor && array[right] > array[largest]){
+        largest = right;
+    }
+    if (largest != indice){
+        std::swap(array[indice], array[largest]);
+        heapify(array, tamanho_vetor, largest);
+    }
+}
+
 Conjunto::~Conjunto()
 {
     if (vetor){
@@ -195,5 +238,9 @@ Conjunto::~Conjunto()
     if (vetor_merge_sort){
         delete[] vetor_merge_sort;
         vetor_merge_sort = 0;
+    }
+    if (vetor_heap_sort){
+        delete[] vetor_heap_sort;
+        vetor_heap_sort = 0;
     }
 }

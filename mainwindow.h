@@ -2,6 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "conjunto.h"
+#include "QString"
+#include "QMessageBox"
+#include <chrono>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -14,6 +18,11 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+private slots:
+    void on_pushButton_gerar_clicked();
+
+    void on_lineEdit_qtd_elementos_returnPressed();
 
 private:
     Ui::MainWindow *ui;

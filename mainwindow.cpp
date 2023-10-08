@@ -74,7 +74,20 @@ void MainWindow::on_pushButton_gerar_clicked()
             saida_vetor += "|" + QString::number(conj.getVetorMergeSort()[i]) + "| ";
         }
         ui->textEdit_merge_sort->setText(saida_vetor);
+        ui->textEdit_merge_sort_nmr_execucoes->setText(QString::number(conj.getNmrExecucoes()));
         ui->textEdit_merge_sort_tempo_execucoes->setText(QString::number(duration.count()) + "µs");
+
+        start = std::chrono::high_resolution_clock::now();
+        conj.heapSort();
+        finish = std::chrono::high_resolution_clock::now();
+        duration = std::chrono::duration_cast<std::chrono::microseconds>(finish - start);
+        saida_vetor = "";
+        for (int i = 0; i < tamanho_array; ++i){
+            saida_vetor += "|" + QString::number(conj.getVetorHeapSort()[i]) + "| ";
+        }
+        ui->textEdit_heap_sort->setText(saida_vetor);
+        ui->textEdit_heap_sort_nmr_execucoes->setText(QString::number(conj.getNmrExecucoes()));
+        ui->textEdit_heap_sort_tempo_execucoes->setText(QString::number(duration.count()) + "µs");
     }
     catch(QString& e)
     {

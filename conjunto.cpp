@@ -132,10 +132,14 @@ void Conjunto::mergeSort(){
     if (tamanho_vetor <= 0 || !vetor_merge_sort){
         throw QString("Erro: vetor vazio ou tamanho invalido");
     }
+    if (nmr_execucoes){
+        nmr_execucoes = 0;
+    }
     mergeSort(vetor_merge_sort, 0, tamanho_vetor - 1);
 }
 
 void Conjunto::mergeSort(int *array, int inicio, int fim){
+    ++nmr_execucoes;
     if (inicio < fim){
         int meio = (inicio + fim) / 2;
         mergeSort(array, inicio, meio);
